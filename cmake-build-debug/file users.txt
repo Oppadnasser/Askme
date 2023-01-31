@@ -1,0 +1,3 @@
+name Id username email password anonymous
+nasser 1 nasser sd@gmsa.co 123 0
+oppad 2 oppad sdf@sdf.co 123 1

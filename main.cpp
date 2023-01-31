@@ -1,6 +1,6 @@
 #include <iostream>
-
+#include "manager.h"
 int main() {
-  std::cout << "Hello, World!" << std::endl;
+  manager prog;
   return 0;
 }
