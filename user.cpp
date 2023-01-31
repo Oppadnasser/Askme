@@ -144,45 +144,40 @@ string user::GetEmail() {
   return email;
 }
 void user::SaveData(ofstream &q_file, ofstream &thr_file , set<user> users) {
-//  for(auto u : users) {
-//    for (auto a: u.q_I_Asked)
-//      a.SaveData(thr_file);
-//  }
   for(auto a : q_was_Asked){
-    q_file << '\n' << a.GetQId() << ' ' << a.GetSender() << ' ' << a.GetReceiver() << ' ' << a.get_q_text() << ' '
-    << a.get_Answer_text() << ' ' << a.Getanon();
+    q_file << '\n' << a.GetQId() << ' ' << a.GetSender() << ' ' << a.GetReceiver() << '\n' << a.get_q_text() << '\n'
+    << a.get_Answer_text() << '\n' << a.Getanon();
     a.SaveData(thr_file);
   }
 }
 
-void user::SetAnswer() {
-  int id;
-  string s;
-  cout << "Enter question id or -1 to cancel : ";
-  cin >> id;
-  if(id == -1)
-    return;
+int user::SetAnswer(int id , string An) {
   for(int i = 0 ; i < q_was_Asked.size(); ++i){
     if(q_was_Asked[i].GetQId() == id){
-      q_was_Asked[i].Set_Answer_text();
-      return;
+      q_was_Asked[i].Set_Answer_text(An);
+      return q_was_Asked[i].GetSender();
     }
-    if(q_was_Asked[i].setA(id))
-      return;
+    int re = q_was_Asked[i].setA2(id, An);
+    if(re)
+      return re;
   }
   for(int i = 0 ; i < q_I_Asked.size(); ++i){
-    if(q_I_Asked[i].setA(id))
-      return;
+    if(q_I_Asked[i].GetQId() == id){
+      q_I_Asked[i].Set_Answer_text(An);
+      return q_I_Asked[i].GetSender();
   }
+    int re = q_I_Asked[i].setA2(id , An);
+    if(re)
+      return re;
+
+    }
   cout << "invalid id question\n";
-  SetAnswer();
 
 }
 
-int user::DeleteQ() {
-  int i , re_sender;
-  cout << "Enter question id or -1 to cancel:";
-  cin >> i;
+int user::DeleteQ(int i) {
+  int re_sender = 0;
+
   deque<qustion>::iterator it;
   for (it = q_I_Asked.begin(); it != q_I_Asked.end(); it++) {
     if (it->GetQId() == i) {
@@ -190,16 +185,49 @@ int user::DeleteQ() {
       q_I_Asked.erase(it);
       return re_sender;
     }
+    re_sender = it->DeleteQt(i , id);
+    if(re_sender)
+      return re_sender;
   }
     for (it = q_was_Asked.begin(); it != q_was_Asked.end(); it++) {
       if (it->GetQId() == i) {
+        re_sender = it->GetSender();
         q_was_Asked.erase(it);
         return re_sender;
       }
+      re_sender = it->DeleteQt(i , id);
+      if(re_sender)
+        return re_sender;
     }
     cout << "invalid question id\n";
 }
 
 user::user(int i) {
 
+}
+
+bool user::GetQ(int j) {
+  for(int i = 0 ; i < q_was_Asked.size(); ++i){
+    if(q_was_Asked[i].GetQId() == j){
+//      q_was_Asked[i].Set_Answer_text();
+      q_was_Asked[i].print_q();
+      return true;
+    }
+    if(q_was_Asked[i].setA(j , id))
+      return true;
+  }
+  for(int i = 0 ; i < q_I_Asked.size(); ++i){
+    if(q_I_Asked[i].setA(j , id))
+      return true;
+  }
+  cout << "invalid id question\n";
+  return false;
+
+}
+
+void user::printFeeD() {
+  for(auto a : q_I_Asked)
+    a.printFeed();
+  for(auto a : q_was_Asked)
+    a.printFeed();
 }

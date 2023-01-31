@@ -22,17 +22,18 @@ void threated::Set_q_text() {
   cin >> qustion_text;
 }
 
-void threated::Set_Answer_text() {
-  cout << "question ID(" << q_ID << ") from user id(" << sender_id << ')' << endl;
-  cout << "Question : " << qustion_text << '\n';
-  if(Answer == "Not"){
-    cout << "Not answered yet\n";
-  }
-  else{
-    cout << "Answer : " << Answer << '\n' << "warning : Already answered , answer will be updated \n";
-  }
-  cout << "Enter answer : ";
-  cin >> Answer;
+void threated::Set_Answer_text(string str) {
+//  cout << "question ID(" << q_ID << ") from user id(" << sender_id << ')' << endl;
+//  cout << "Question : " << qustion_text << '\n';
+//  if(Answer == "Not"){
+//    cout << "Not answered yet\n";
+//  }
+//  else{
+//    cout << "Answer : " << Answer << '\n' << "warning : Already answered , answer will be updated \n";
+//  }
+//  cout << "Enter answer : ";
+//  cin >> Answer;
+  Answer = str;
 }
 
 string threated::get_q_text() {
@@ -122,6 +123,19 @@ threated::threated() {
 
 }
 
+void threated::print_q() {
+  cout << "question ID(" << q_ID << ") from user id(" << sender_id << ')' << endl;
+  cout << "Question : " << qustion_text << '\n';
+  if(Answer == "Not"){
+    cout << "Not answered yet\n";
+  }
+  else{
+    cout << "Answer : " << Answer << '\n' << "warning : Already answered , answer will be updated \n";
+  }
+  cout << "Enter answer : ";
+
+}
+
 void qustion::printFrom() {
   cout << "question ID(" << q_ID << ") from user id(" << sender_id << ')';
   cout << "       Question : " << qustion_text << '\n';
@@ -152,19 +166,12 @@ void qustion::push_threated(threated a) {
 }
 map<int , string> Answers;
 void qustion::SaveData(ofstream& thr_file) {
-//  bool founded = false;
   for(int i = 0 ; i < threated_q.size() ; i++){
-//    for(auto it = Answers.begin() ; it != Answers.end();it++){
-//      if(it->first==threated_q[i].GetQId()){
-//        founded = true;
-//        break;
-//      }
-//    }
       thr_file << '\n' << threated_q[i].GetQId() << " "
                << threated_q[i].GetPId() << ' ' << threated_q[i].GetSender()
                << ' '
-               << threated_q[i].GetReceiver() << ' '
-               << threated_q[i].get_q_text() << ' '
+               << threated_q[i].GetReceiver() << '\n'
+               << threated_q[i].get_q_text() << '\n'
                << threated_q[i].get_Answer_text();
       Answers[threated_q[i].GetQId()] = threated_q[i].get_Answer_text();
 
@@ -205,12 +212,55 @@ qustion::qustion() {
 
 }
 
-bool qustion::setA(int s) {
+bool qustion::setA(int s , int rid) { // for print
   for(int i = 0 ; i < threated_q.size();i++){
-    if(threated_q[i].GetQId() == s){
-      threated_q[i].Set_Answer_text();
+    if(threated_q[i].GetQId() == s && threated_q[i].GetReceiver() == rid){
+      threated_q[i].print_q();
       return true;
     }
   }
   return false;
 }
+
+int qustion::setA2(int s, string An) { // for modify Answer
+  for(int i = 0 ; i < threated_q.size();i++){
+    if(threated_q[i].GetQId() == s){
+      threated_q[i].Set_Answer_text(An);
+      return threated_q[i].GetSender();
+    }
+  }
+  return 0;
+}
+
+void qustion::printFeed() {
+  cout << "question ID(" << q_ID << ")from user id(" << GetSender() << ") to user id(" << receiver_id << ')';
+  cout << "      Question : " << qustion_text << '\n';
+  cout << "        Answer : " << Answer << '\n';
+  for(int i = 0 ; i < threated_q.size();++i){
+    cout << "Thread parent question id (" << threated_q[i].GetQId() << ")from user id(" << threated_q[i].GetSender() << " to user id(" << threated_q[i].GetReceiver() << ')';
+    cout << "      Question : " << threated_q[i].get_q_text() << '\n';
+    cout << "        Answer : " << threated_q[i].get_Answer_text() << '\n';
+  }
+
+}
+
+int qustion::DeleteQt(int i , int ID) {
+  int j;
+  for(auto it = threated_q.begin() ; it != threated_q.end();it++){
+    if(i == it->GetQId()){
+      if(it->GetSender() == ID){
+        j = it->GetReceiver();
+        threated_q.erase(it);
+        return j;
+      }
+      else{
+        j = it->GetSender();
+        threated_q.erase(it);
+        return j;
+      }
+    }
+  }
+  return 0;
+}
+
+

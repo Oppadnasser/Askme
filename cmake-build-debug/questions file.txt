@@ -1,2 +1,4 @@
-question_Id sender_ID receiver_ID question Answer anonymous
-0 2 1 asdfid ok 0
+question_Id sender_ID receiver_ID
+question
+Answer
+anonymous

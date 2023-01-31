@@ -21,8 +21,9 @@ private:
   void SetEmail();
   void SetPassword();
   void SetId(int i);
-  void SetAnswer();
-  int DeleteQ();
+  void printFeeD();
+  int SetAnswer(int id , string An);
+  int DeleteQ(int i);
   user();
   user(int i);
   user(int i , string N , string usN , string emai , string pass , bool ano);
@@ -37,6 +38,7 @@ private:
   void push_q_was(qustion s);
   void push_threatedQ(threated a);
   void SaveData(ofstream& q_file , ofstream& thr_file , set<user> users);
+  bool GetQ(int i);
   bool operator <(const user& user1)const;
 };
 

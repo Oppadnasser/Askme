@@ -19,7 +19,8 @@ class threated{
   void Set_senderId( int i);
   void Set_receiverId(int i);
   void Set_q_text();
-  void Set_Answer_text();
+  void Set_Answer_text(string str);
+  void print_q();
   threated();
   threated(int i , int sId , int reId , string qt , string An , int a);
   threated(int i , int sId , int reId , string qt , int anon);
@@ -46,9 +47,12 @@ class qustion : public threated {
   void printTo();
   void printFrom1(); // to print question in case 2
   void printTo1();
+  void printFeed();
   void push_threated(threated a);
   void SaveData(ofstream& thr_file);
-  bool setA(int s);
+  bool setA(int s , int rid);
+  int setA2(int s , string An);
+  int DeleteQt(int i , int ID);
 };
 
 
